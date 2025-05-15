@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="9" author="Egor Yahimovich">
+        <addColumn tableName="accounts">
+            <column name="initial_balance" type="NUMERIC(19,2)"/>
+        </addColumn>
+
+        <update tableName="accounts">
+            <column name="initial_balance" valueComputed="balance"/>
+        </update>
+
+        <addNotNullConstraint tableName="accounts"
+                              columnName="initial_balance"
+                              columnDataType="NUMERIC(19,2)"/>
+    </changeSet>
+</databaseChangeLog>

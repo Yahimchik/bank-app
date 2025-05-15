@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="0" author="Egor Yahimovich" runOnChange="true">
+        <sql>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</sql>
+    </changeSet>
+
+    <changeSet id="1" author="Egor Yahimovich">
+        <createTable tableName="users">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="DATE"/>
+            <column name="password" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ChangeSet для создания таблицы accounts -->
+    <changeSet id="2" author="Egor Yahimovich">
+        <createTable tableName="accounts">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <!-- Добавление внешнего ключа на user -->
+        <addForeignKeyConstraint
+                baseTableName="accounts"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_account_user"/>
+    </changeSet>
+
+    <!-- ChangeSet для создания таблицы email_data_table -->
+    <changeSet id="3" author="Egor Yahimovich">
+        <createTable tableName="email_data_table">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(200)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+        <!-- Добавление внешнего ключа на user -->
+        <addForeignKeyConstraint
+                baseTableName="email_data_table"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_email_data_user"/>
+    </changeSet>
+
+    <!-- ChangeSet для создания таблицы phone_data_table -->
+    <changeSet id="4" author="Egor Yahimovich">
+        <createTable tableName="phone_data_table">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(13)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+        <!-- Добавление внешнего ключа на user -->
+        <addForeignKeyConstraint
+                baseTableName="phone_data_table"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_phone_data_user"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Генерация данных пользователей -->
+    <changeSet id="5" author="Egor Yahimovich">
+        <sql>
+        <![CDATA[
+            INSERT INTO users (id, name, date_of_birth, password)
+            VALUES
+                (uuid_generate_v4(), 'User_1', ('1990-01-01'::date + (random() * (CURRENT_DATE - '1990-01-01'::date))::int)::date, '$2a$10$8xvxO6RmWyeePsA2Uw6HdOJz4w4Fo/xr2fP8vo9h8g7TgwtVbscXa'),
+                (uuid_generate_v4(), 'User_2', ('1990-01-01'::date + (random() * (CURRENT_DATE - '1990-01-01'::date))::int)::date, '$2a$10$k9t6hAc8Q/EozB3erykGOOOoAP1uBtREio7dwl8x2PQ0/L0UoGzSO'),
+                (uuid_generate_v4(), 'User_3', ('1990-01-01'::date + (random() * (CURRENT_DATE - '1990-01-01'::date))::int)::date, '$2a$10$kYuC.U6bx17kw8GLsMRZH.XCbtS9vHK5ONY1hYoV0AQs1o6I9BeQO');
+            ]]>
+    </sql>
+    </changeSet>
+
+    <!-- Генерация аккаунтов для пользователей -->
+    <changeSet id="6" author="Egor Yahimovich">
+        <sql>
+            <![CDATA[
+            INSERT INTO accounts (id, user_id, balance)
+            VALUES
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_1'), 1000.00),
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_2'), 2000.00),
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_3'), 3000.00);
+            ]]>
+        </sql>
+    </changeSet>
+
+    <!-- Генерация email для пользователей -->
+    <changeSet id="7" author="Egor Yahimovich">
+        <sql>
+            <![CDATA[
+            INSERT INTO email_data_table (id, user_id, email)
+            VALUES
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_1'), 'user1@example.com'),
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_2'), 'user2@example.com'),
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_3'), 'user3@example.com');
+            ]]>
+        </sql>
+    </changeSet>
+
+    <!-- Генерация телефонов для пользователей -->
+    <changeSet id="8" author="Egor Yahimovich">
+        <sql>
+            <![CDATA[
+            INSERT INTO phone_data_table (id, user_id, phone)
+            VALUES
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_1'), '79200000001'),
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_2'), '79200000002'),
+                (uuid_generate_v4(), (SELECT id FROM users WHERE name = 'User_3'), '79200000003');
+            ]]>
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
